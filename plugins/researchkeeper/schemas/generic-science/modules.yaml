@@ -1,0 +1,81 @@
+template_id: generic-science
+template_version: "1"
+schema_version: schema_v1
+modules:
+  - name: literature
+    display: Literature
+    file: literature.md
+    role: literature
+    description: Paper identity, provenance, and bibliographic context.
+    trigger_keywords: [paper, article, review, bibliography]
+    extract_rules:
+      subject: Paper or review.
+      metric: Core contribution or literature context.
+      condition: Research scope.
+    audit_focus: [bibliographic identity, source traceability]
+  - name: entities
+    display: Entities
+    file: entities.md
+    role: entities
+    description: Materials, systems, species, samples, and named objects.
+    trigger_keywords: [material, sample, species, system]
+    extract_rules:
+      subject: Named entity.
+      metric: Identity or defining property.
+      condition: State or context.
+    audit_focus: [identity consistency, naming precision]
+  - name: methods
+    display: Methods
+    file: methods.md
+    role: methods
+    description: Experimental, computational, and analytical procedures.
+    trigger_keywords: [method, protocol, instrument, calculation]
+    extract_rules:
+      subject: Method or setup.
+      metric: Procedure or parameter.
+      condition: Applicability and execution context.
+    audit_focus: [method reproducibility, parameter provenance]
+  - name: conditions
+    display: Conditions
+    file: conditions.md
+    role: conditions
+    description: Environmental, experimental, and computational conditions.
+    trigger_keywords: [temperature, pressure, concentration, potential]
+    extract_rules:
+      subject: System or experiment.
+      metric: Controlled condition.
+      condition: Measurement or calculation context.
+    audit_focus: [units, boundary conditions]
+  - name: results
+    display: Results
+    file: results.md
+    role: results
+    description: Quantitative and qualitative research outcomes.
+    trigger_keywords: [result, measurement, performance, observation]
+    extract_rules:
+      subject: Evaluated system.
+      metric: Reported outcome.
+      condition: Conditions under which the result applies.
+    audit_focus: [numeric accuracy, source location]
+  - name: relations
+    display: Relations
+    file: relations.md
+    role: relations
+    description: Mechanisms, dependencies, correlations, and causal links.
+    trigger_keywords: [mechanism, relation, correlation, pathway]
+    extract_rules:
+      subject: Related entities or process.
+      metric: Relationship or mechanism.
+      condition: Evidence context.
+    audit_focus: [causal support, alternative explanations]
+  - name: claims
+    display: Claims
+    file: claims.md
+    role: claims
+    description: Author claims, limitations, and evidence-backed conclusions.
+    trigger_keywords: [claim, conclusion, limitation, implication]
+    extract_rules:
+      subject: Claimed finding.
+      metric: Conclusion or limitation.
+      condition: Scope of the claim.
+    audit_focus: [claim evidence, qualification and scope]

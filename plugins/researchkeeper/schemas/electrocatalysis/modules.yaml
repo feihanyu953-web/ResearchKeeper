@@ -1,0 +1,103 @@
+template_id: electrocatalysis
+template_version: "1"
+schema_version: schema_v1
+modules:
+  - name: literature
+    display: 论文索引
+    file: literature.md
+    role: literature
+    description: 论文身份、来源、研究范围和文献语境。
+    trigger_keywords: [论文, 综述, 分类框架, 种子论文]
+    extract_rules:
+      subject: 论文或分类框架
+      metric: 核心贡献、子领域、类型
+      condition: 研究方向或反应体系
+    audit_focus: [书目信息, 出处可追溯性]
+  - name: entities
+    display: 体系与物种
+    file: entities.md
+    role: entities
+    description: 催化剂、电解质、反应物、中间体和样品身份。
+    trigger_keywords: [催化剂, 电解质, 反应物, 中间体, 样品]
+    extract_rules:
+      subject: 材料、物种或体系
+      metric: 身份、组成或结构
+      condition: 状态、界面或反应语境
+    audit_focus: [命名一致性, 组成与结构证据]
+  - name: synthesis
+    display: 材料合成
+    file: synthesis.md
+    role: methods
+    description: 催化材料制备、处理和组装方法。
+    trigger_keywords: [前驱体, 热解, 水热, 电沉积, 掺杂, 载体]
+    extract_rules:
+      subject: 催化剂或材料名称
+      metric: 前驱体、用量、温度、时间、气氛
+      condition: 合成路线、水热、电沉积、热解或浸渍
+    audit_focus: [步骤完整性, 用量与温度出处]
+  - name: methods
+    display: 实验与计算方法
+    file: methods.md
+    role: methods
+    description: 电化学测试、表征和计算设置。
+    trigger_keywords: [H-cell, flow-cell, GDE, 参比电极, 泛函, k-points]
+    extract_rules:
+      subject: 方法、构型或计算设置
+      metric: cell type、functional、k-points、slab 模型
+      condition: 适用体系或用途
+    audit_focus: [可复现参数, 电位换算与计算设置]
+  - name: conditions
+    display: 反应条件
+    file: conditions.md
+    role: conditions
+    description: 电位、电解液、浓度、温度和电池边界条件。
+    trigger_keywords: [电位, 电解液, pH, 浓度, 温度, 压力]
+    extract_rules:
+      subject: 反应或测试体系
+      metric: 受控条件
+      condition: 电池、气氛和测量语境
+    audit_focus: [单位, 参比标尺, 边界条件]
+  - name: performance
+    display: 性能数据
+    file: performance.md
+    role: results
+    description: 活性、选择性、产率和稳定性结果。
+    trigger_keywords: [FE, 电流密度, Tafel, ECSA, TOF, 产率, 稳定性]
+    extract_rules:
+      subject: 催化剂与反应
+      metric: FE、j、Tafel、TOF、产率或稳定性
+      condition: 电位、电解液、电池构型、底物浓度
+    audit_focus: [数值精度, 单位与测试条件]
+  - name: spectra
+    display: 谱图表征
+    file: spectra.md
+    role: results
+    description: 光谱、散射、质谱和结构表征结果。
+    trigger_keywords: [Raman, IR, XPS, XAS, EXAFS, DEMS, NMR, EPR]
+    extract_rules:
+      subject: 材料、体系或中间体
+      metric: 技术、峰或信号
+      condition: 原位条件、电位、光照或反应物
+    audit_focus: [峰位归属, 原位条件与图号]
+  - name: mechanism
+    display: 反应机理
+    file: mechanism.md
+    role: relations
+    description: 反应路径、决速步、中间体和结构性能关系。
+    trigger_keywords: [反应路径, 决速步, 中间体, 描述符, 自由能图, PCET]
+    extract_rules:
+      subject: 路径、活性位、描述符或中间体
+      metric: RDS、barrier、ΔG、吸附模式或描述符
+      condition: 模型、表面、电解质和反应条件
+    audit_focus: [机理证据, 替代路径与因果边界]
+  - name: claims
+    display: 结论与主张
+    file: claims.md
+    role: claims
+    description: 作者结论、局限性和证据支持的科学主张。
+    trigger_keywords: [结论, 主张, 局限, 意义, 展望]
+    extract_rules:
+      subject: 作者主张或限制
+      metric: 结论、局限或意义
+      condition: 适用范围
+    audit_focus: [证据支持, 限定语与外推边界]

@@ -1,0 +1,65 @@
+#!/bin/sh
+set -e
+
+if [ -z "${CLAUDE_PLUGIN_DATA:-}" ]; then
+    echo "ResearchKeeper: CLAUDE_PLUGIN_DATA is not set" >&2
+    exit 2
+fi
+if [ -z "${CLAUDE_PLUGIN_ROOT:-}" ]; then
+    echo "ResearchKeeper: CLAUDE_PLUGIN_ROOT is not set" >&2
+    exit 2
+fi
+
+active_file="${CLAUDE_PLUGIN_DATA}/venvs/active.json"
+if [ ! -r "${active_file}" ]; then
+    echo "ResearchKeeper: active installation is missing; run /researchkeeper:setup" >&2
+    exit 2
+fi
+
+# Validate lock_hash + extract python path (PowerShell / POSIX sh).
+ps_command=""
+if command -v pwsh >/dev/null 2>&1; then
+    ps_command="pwsh"
+elif command -v powershell >/dev/null 2>&1; then
+    ps_command="powershell"
+fi
+if [ -n "${ps_command}" ]; then
+    venv_python=$(
+        "${ps_command}" -NoProfile -ExecutionPolicy Bypass \
+            -File "${CLAUDE_PLUGIN_ROOT}/bin/check_hash.ps1" \
+            -ActiveJson "${active_file}" 2>/dev/null \
+        | sed -n 's/^RSK_PYTHON=//p'
+    )
+else
+    # Fresh bootstrap output is pretty-printed JSON with one field per line.
+    # A missing lock_hash remains compatible with manually repaired CUDA
+    # installations; if present, it must still be a valid SHA-256 value.
+    lock_hash=$(
+        sed -n \
+            's/^[[:space:]]*"lock_hash"[[:space:]]*:[[:space:]]*"\([^"]*\)"[[:space:]]*,\{0,1\}[[:space:]]*$/\1/p' \
+            "${active_file}"
+    )
+    if [ -n "${lock_hash}" ] && ! printf '%s\n' "${lock_hash}" | grep -Eq '^[0-9a-f]{64}$'; then
+        echo "ResearchKeeper: active installation is invalid (bad lock_hash)" >&2
+        exit 2
+    fi
+    venv_python=$(
+        sed -n \
+            's/^[[:space:]]*"python"[[:space:]]*:[[:space:]]*"\([^"]*\)"[[:space:]]*,\{0,1\}[[:space:]]*$/\1/p' \
+            "${active_file}"
+    )
+fi
+
+if [ -z "${venv_python}" ]; then
+    echo "ResearchKeeper: no python field in active.json; run /researchkeeper:setup" >&2
+    exit 2
+fi
+
+if [ ! -x "${venv_python}" ]; then
+    echo "ResearchKeeper: active venv Python is missing; run /researchkeeper:setup" >&2
+    exit 2
+fi
+
+PYTHONPATH="${CLAUDE_PLUGIN_ROOT}${PYTHONPATH:+:${PYTHONPATH}}"
+export PYTHONPATH
+exec "${venv_python}" -m rsk.cli "$@"

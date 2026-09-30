@@ -1,0 +1,244 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rsk"
+version = "0.2.0"
+description = "ResearchKeeper — AI-assisted paper knowledge management for academic researchers"
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "numpy>=1.24",
+    "sentence-transformers>=2.6",
+    "huggingface-hub>=0.20",
+    "torch>=2.0",
+    "pyyaml>=6.0",
+    "platformdirs>=4.0",
+    "modelscope>=1.10",
+    "pymupdf>=1.23",
+]
+
+[project.optional-dependencies]
+dev = [
+    "build>=1.2",
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.6",
+]
+
+[project.scripts]
+rsk = "rsk.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["rsk*"]
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.package-data]
+rsk = ["audit/*.md"]
+
+[tool.setuptools.data-files]
+"schemas" = ["schemas/schema-proposal.schema.json"]
+"schemas/generic-science" = [
+    "schemas/generic-science/INDEX.md",
+    "schemas/generic-science/REVIEWER.md",
+    "schemas/generic-science/SCHEMA.md",
+    "schemas/generic-science/modules.yaml",
+    "schemas/generic-science/vector_gate_queries.yaml",
+]
+"schemas/electrocatalysis" = [
+    "schemas/electrocatalysis/REVIEWER.md",
+    "schemas/electrocatalysis/SCHEMA.md",
+    "schemas/electrocatalysis/modules.yaml",
+    "schemas/electrocatalysis/vector_gate_queries.yaml",
+]
+"share/researchkeeper/plugin" = [
+    "README.md",
+    "README_CN.md",
+    "requirements.lock",
+    "requirements.cuda.lock",
+    "LICENSE",
+    "CONTENT_LICENSE",
+    "THIRD_PARTY_NOTICES.md",
+]
+"share/researchkeeper/plugin/.claude-plugin" = [
+    ".claude-plugin/plugin.json",
+]
+"share/researchkeeper/plugin/agents" = [
+    "agents/computer-kb-independent-reviewer.md",
+    "agents/kb-independent-reviewer.md",
+    "agents/vector-retrieval-auditor.md",
+]
+"share/researchkeeper/plugin/audit/lib" = [
+    "audit/lib/TreeHash.ps1",
+]
+"share/researchkeeper/plugin/audit/scripts" = [
+    "audit/scripts/New-AuditReceipt.ps1",
+    "audit/scripts/New-ComputerKbAuditReceipt.ps1",
+    "audit/scripts/New-VectorAuditReceipt.ps1",
+    "audit/scripts/Ensure-RskQueryServer.ps1",
+    "audit/scripts/approve_kb_audit.ps1",
+]
+"share/researchkeeper/plugin/bin" = [
+    "bin/check_hash.ps1",
+    "bin/rsk",
+    "bin/rsk.cmd",
+]
+"share/researchkeeper/plugin/docs" = [
+    "docs/installation.md",
+    "docs/provider-protocol.md",
+    "docs/schema-customization.md",
+]
+"share/researchkeeper/plugin/scripts" = [
+    "scripts/bootstrap_plugin.py",
+    "scripts/validate_si_consistency.py",
+]
+"share/researchkeeper/plugin/skills/configure-schema" = [
+    "skills/configure-schema/SKILL.md",
+]
+"share/researchkeeper/plugin/skills/audit-all" = [
+    "skills/audit-all/SKILL.md",
+]
+"share/researchkeeper/plugin/skills/post-computer-kb-audit" = [
+    "skills/post-computer-kb-audit/SKILL.md",
+]
+"share/researchkeeper/plugin/skills/post-kb-audit" = [
+    "skills/post-kb-audit/SKILL.md",
+]
+"share/researchkeeper/plugin/skills/post-vector-audit" = [
+    "skills/post-vector-audit/SKILL.md",
+]
+"share/researchkeeper/plugin/skills/researchkeeper" = [
+    "skills/researchkeeper/SKILL.md",
+    "skills/researchkeeper/references/RSK-DETAILED-GUIDE.md",
+]
+"share/researchkeeper/plugin/skills/setup" = [
+    "skills/setup/SKILL.md",
+]
+"schemas/generic-science/kb" = [
+    "schemas/generic-science/kb/claims.md",
+    "schemas/generic-science/kb/conditions.md",
+    "schemas/generic-science/kb/entities.md",
+    "schemas/generic-science/kb/literature.md",
+    "schemas/generic-science/kb/methods.md",
+    "schemas/generic-science/kb/relations.md",
+    "schemas/generic-science/kb/results.md",
+]
+"schemas/electrocatalysis/kb" = [
+    "schemas/electrocatalysis/kb/literature.md",
+    "schemas/electrocatalysis/kb/mechanism.md",
+    "schemas/electrocatalysis/kb/methods.md",
+    "schemas/electrocatalysis/kb/performance.md",
+    "schemas/electrocatalysis/kb/spectra.md",
+    "schemas/electrocatalysis/kb/synthesis.md",
+]
+"schemas/electrocatalysis/kb/reference" = [
+    "schemas/electrocatalysis/kb/reference/common_ir.md",
+    "schemas/electrocatalysis/kb/reference/common_raman.md",
+    "schemas/electrocatalysis/kb/reference/common_xps.md",
+]
+"schemas/computational" = [
+    "schemas/computational/INDEX.md",
+    "schemas/computational/REVIEWER.md",
+    "schemas/computational/SCHEMA.md",
+    "schemas/computational/sources.md",
+]
+"schemas/computational/records" = [
+    "schemas/computational/records/errors.md",
+    "schemas/computational/records/lammps.md",
+    "schemas/computational/records/lammps_md.md",
+    "schemas/computational/records/vasp.md",
+    "schemas/computational/records/vasp_md.md",
+    "schemas/computational/records/workflows.md",
+]
+"schemas/computational/records/error_chains" = [
+    "schemas/computational/records/error_chains/lammps_md_energy_nan.md",
+    "schemas/computational/records/error_chains/vasp_adsorption_energy_abnormal.md",
+    "schemas/computational/records/error_chains/vasp_dos_dband_abnormal.md",
+    "schemas/computational/records/error_chains/vasp_md_atom_explosion.md",
+    "schemas/computational/records/error_chains/vasp_neb_not_converge.md",
+    "schemas/computational/records/error_chains/vasp_scf_not_converge.md",
+]
+"schemas/computational/records/relations" = [
+    "schemas/computational/records/relations/lammps_md_fix_thermostat_chain.md",
+    "schemas/computational/records/relations/lammps_md_setup_chain.md",
+    "schemas/computational/records/relations/vasp_adsorption_energy_chain.md",
+    "schemas/computational/records/relations/vasp_dft_plus_u.md",
+    "schemas/computational/records/relations/vasp_electronic_structure_chain.md",
+    "schemas/computational/records/relations/vasp_md_thermostat_chain.md",
+    "schemas/computational/records/relations/vasp_neb_chain.md",
+    "schemas/computational/records/relations/vasp_scf_accuracy_chain.md",
+]
+"schemas/computational/records/templates" = [
+    "schemas/computational/records/templates/vasp_adsorbate_free_energy.md",
+    "schemas/computational/records/templates/vasp_aimd_nvt_pt_water.md",
+    "schemas/computational/records/templates/vasp_dos_pdos_bader.md",
+    "schemas/computational/records/templates/vasp_neb_ci.md",
+    "schemas/computational/records/templates/vasp_vaspsol_implicit_solvent.md",
+    "schemas/computational/records/templates/vasp_vibrational_freq.md",
+]
+"schemas/computational/scripts" = [
+    "schemas/computational/scripts/check_wiki_links.py",
+]
+"schemas/computational/wiki" = [
+    "schemas/computational/wiki/index.md",
+]
+"schemas/computational/wiki/concepts" = [
+    "schemas/computational/wiki/concepts/README.md",
+    "schemas/computational/wiki/concepts/lammps_command_index.md",
+    "schemas/computational/wiki/concepts/lammps_md_basics.md",
+    "schemas/computational/wiki/concepts/lammps_md_fix_thermostat_chain.md",
+    "schemas/computational/wiki/concepts/lammps_md_setup_chain.md",
+    "schemas/computational/wiki/concepts/vasp_adsorption_energy_chain.md",
+    "schemas/computational/wiki/concepts/vasp_aimd_md_parameters.md",
+    "schemas/computational/wiki/concepts/vasp_dft_plus_u_guide.md",
+    "schemas/computational/wiki/concepts/vasp_electronic_structure_chain.md",
+    "schemas/computational/wiki/concepts/vasp_md_thermostat_guide.md",
+    "schemas/computational/wiki/concepts/vasp_neb_chain.md",
+    "schemas/computational/wiki/concepts/vasp_scf_accuracy_chain.md",
+    "schemas/computational/wiki/concepts/vasp_vaspsol_implicit_solvent.md",
+]
+"schemas/computational/wiki/entities" = [
+    "schemas/computational/wiki/entities/README.md",
+]
+"schemas/computational/wiki/errors" = [
+    "schemas/computational/wiki/errors/README.md",
+    "schemas/computational/wiki/errors/aimd_temperature_runaway.md",
+    "schemas/computational/wiki/errors/lammps_energy_stress_not_tallied.md",
+    "schemas/computational/wiki/errors/lammps_lost_atoms.md",
+    "schemas/computational/wiki/errors/lammps_md_energy_nan.md",
+    "schemas/computational/wiki/errors/lammps_non_numeric_instability.md",
+    "schemas/computational/wiki/errors/lammps_out_of_range_atoms.md",
+    "schemas/computational/wiki/errors/lammps_unrecognized_style_package.md",
+    "schemas/computational/wiki/errors/vasp_adsorption_energy_abnormal.md",
+    "schemas/computational/wiki/errors/vasp_dos_dband_abnormal.md",
+    "schemas/computational/wiki/errors/vasp_md_atom_explosion.md",
+    "schemas/computational/wiki/errors/vasp_neb_not_converge.md",
+    "schemas/computational/wiki/errors/vasp_scf_not_converge.md",
+]
+"schemas/computational/wiki/meta" = [
+    "schemas/computational/wiki/meta/README.md",
+]
+"schemas/computational/wiki/workflows" = [
+    "schemas/computational/wiki/workflows/README.md",
+]
+"share/researchkeeper/plugin/workflow/computer-kb" = [
+    "workflow/computer-kb/paper_to_compute.md",
+    "workflow/computer-kb/query_router.md",
+    "workflow/computer-kb/workflow_design.md",
+]
+"share/researchkeeper/plugin/workflow/knowledge" = [
+    "workflow/knowledge/INGEST.md",
+    "workflow/knowledge/RETRIEVAL.md",
+    "workflow/knowledge/WIKI_SYNC.md",
+]
+"share/researchkeeper/plugin/workflow/paper-reading" = [
+    "workflow/paper-reading/EXPORT.md",
+    "workflow/paper-reading/READING.md",
+]
+"share/researchkeeper/plugin/workflow/vector" = [
+    "workflow/vector/VECTOR.md",
+]

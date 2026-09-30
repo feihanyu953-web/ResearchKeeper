@@ -1,0 +1,5 @@
+# ResearchKeeper bge-m3 device preference
+# Options: cuda | cpu | auto (default)
+# Uncomment to force a specific device:
+# cuda
+

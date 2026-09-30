@@ -1,0 +1,42 @@
+# ResearchKeeper (`rsk`)
+
+ResearchKeeper v0.2.0 is a Python 3.11 tool and Claude Code plugin for a reviewable paper knowledge base: it materializes an approved schema in an explicit workspace, keeps paper records traceable to source evidence, and can build a local bge-m3 vector index.
+
+[中文说明](README_CN.md) · [Installation](docs/installation.md) · [Schema customization](docs/schema-customization.md) · [Provider Protocol v1](docs/provider-protocol.md)
+
+## Public scope
+
+The public distribution contains the framework, paper-workflow material, generic-science and electrocatalysis templates, and basic VASP/LAMMPS compute reference material. It does **not** contain a user's knowledge base, vectors, model cache, private cluster material, or project-specific coupling and machine-learning-potential content.
+
+## Installation and first use
+
+ResearchKeeper has two supported entry points. Both require Python **3.11.x** (`>=3.11,<3.12`).
+
+- **Standalone CLI:** install with a Python 3.11 launcher, choose an explicit workspace, create/validate a seven-role schema proposal, obtain approval to apply it, then run `rsk setup` with separate model-download consent.
+- **Claude Code plugin:** install the plugin and invoke `/researchkeeper:setup`. Dependency bootstrap uses `${CLAUDE_PLUGIN_DATA}`; for the first schema in an empty workspace invoke `/researchkeeper:configure-schema`.
+
+The first setup downloads or reuses BAAI/bge-m3 (approximately 2.2 GB; transfer size can vary by host and revision). It belongs in a per-user cache, not a project `models/` directory: standalone and plugin runtime use the platform ResearchKeeper user-cache `models/` location. Plugin dependency venvs and active-install state are instead under `${CLAUDE_PLUGIN_DATA}`. `doctor --json` reports the resolved paths. CUDA is optional acceleration only; CPU is a complete fallback. Setup requires confirmation before downloading and does not treat detected hardware as GPU consent.
+
+See [Installation](docs/installation.md) for commands and consent boundaries. The legacy `generic` three-module template has been removed; for v0.2.0 first installation use `generic-science` or `electrocatalysis` via `configure-schema` (not the interactive `rsk init` flow).
+
+## Empty-KB schema flow
+
+`/researchkeeper:configure-schema` checks `schema status --json`, lists `generic-science` and `electrocatalysis`, prepares a proposal outside the KB, validates it, previews the module-to-file and role mapping, and waits for explicit approval before `schema apply --yes --json`. It neither installs dependencies nor downloads a model, creates embeddings, or writes a vector index.
+
+Builtin and custom proposals must represent all seven semantic roles: `literature`, `entities`, `methods`, `conditions`, `results`, `relations`, and `claims`. Each module declares `name`, `display`, `file`, `role`, `description`, `trigger_keywords`, `extract_rules`, and `audit_focus`; proposals also include `template_id`, `template_version`, `schema_version`, and role-targeted `vector_gate_queries`. See [Schema customization](docs/schema-customization.md).
+
+Schema changes are fail-closed. A byte-identical proposal is idempotent only for the same empty KB. A conflicting proposal or a KB with real records is rejected; v0.2.0 has no automatic migration, schema generation, replacement, or rollback for a non-empty KB.
+
+## Coverage and audits
+
+Every paper declares every active module as `covered`, `not_applicable`, or `missing`. A `not_applicable` declaration needs a reason and checkable original-paper/SI evidence, and an independent reviewer must verify it.
+
+An empty configured KB can pass structural schema validation, but it has no paper content, vectors, or retrieval results. Content, vector, and retrieval audits are therefore **N/A**, not PASS, until their inputs exist.
+
+## Provider Protocol v1
+
+`rsk provider` exposes read-oriented `query` and dry-run `write-candidate`. `query` writes a verified result artifact; `write-candidate` validates against a shadow copy and writes review artifacts outside the formal KB. Neither grants permission to write records. Users review the candidate and explicitly approve the normal KB write workflow. See [Provider Protocol v1](docs/provider-protocol.md) for the strict request, artifact, and stdout/stderr contract.
+
+## License
+
+ResearchKeeper code is [MIT](LICENSE). Original knowledge and explanatory content is [CC BY 4.0](CONTENT_LICENSE). [Third-party notices](THIRD_PARTY_NOTICES.md) list direct runtime dependencies and BAAI/bge-m3; ResearchKeeper does not relicense them.

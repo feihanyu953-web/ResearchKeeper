@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "researchkeeper",
+  "displayName": "ResearchKeeper",
+  "version": "0.2.0",
+  "description": "File-first academic knowledge management with reproducible semantic retrieval.",
+  "author": {
+    "name": "ResearchKeeper Contributors"
+  },
+  "homepage": "https://github.com/feihanyu953-web/ResearchKeeper",
+  "repository": "https://github.com/feihanyu953-web/ResearchKeeper",
+  "license": "MIT",
+  "keywords": [
+    "research",
+    "knowledge-management",
+    "semantic-search",
+    "vasp",
+    "lammps"
+  ],
+  "skills": [
+    "./skills/setup",
+    "./skills/researchkeeper",
+    "./skills/configure-schema",
+    "./skills/audit-all",
+    "./skills/post-kb-audit",
+    "./skills/post-vector-audit",
+    "./skills/post-computer-kb-audit"
+  ],
+  "agents": [
+    "./agents/kb-independent-reviewer.md",
+    "./agents/vector-retrieval-auditor.md",
+    "./agents/computer-kb-independent-reviewer.md"
+  ]
+}

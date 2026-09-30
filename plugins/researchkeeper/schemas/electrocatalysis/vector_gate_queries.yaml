@@ -1,0 +1,132 @@
+test_queries:
+  - query: "哪篇论文报告了目标电催化结论，证据位于正文还是补充信息？"
+    expected_role: literature
+    language: zh
+    scenario: source_constraint
+  - query: "Which paper and source section reported the electrocatalytic result?"
+    expected_role: literature
+    language: en
+    scenario: source_constraint
+  - query: "哪些论文对同一性能结论给出了不一致的报告？"
+    expected_role: literature
+    language: zh
+    scenario: conflict_evidence
+  - query: "研究涉及哪些催化剂、反应物、中间体和电解质？"
+    expected_role: entities
+    language: zh
+    scenario: role_smoke
+  - query: "Which catalyst, reactant, intermediate, and electrolyte were studied?"
+    expected_role: entities
+    language: en
+    scenario: role_smoke
+  - query: "文中“活性位”可能对应哪些不同结构实体？"
+    expected_role: entities
+    language: zh
+    scenario: ambiguous_topic
+  - query: "催化剂如何制备并采用什么表征或计算方法？"
+    expected_role: methods
+    language: zh
+    scenario: role_smoke
+  - query: "Which synthesis, characterization, and computational methods were used?"
+    expected_role: methods
+    language: en
+    scenario: source_constraint
+  - query: "哪些对照实验明确没有进行目标预处理？"
+    expected_role: methods
+    language: zh
+    scenario: negation
+  - query: "反应电位、电流密度、电解液浓度和时间范围是多少？"
+    expected_role: conditions
+    language: zh
+    scenario: quantitative_range
+  - query: "What potential, current-density, concentration, and duration ranges were used?"
+    expected_role: conditions
+    language: en
+    scenario: quantitative_range
+  - query: "哪些测试条件没有加入目标离子或助剂？"
+    expected_role: conditions
+    language: zh
+    scenario: negation
+  - query: "法拉第效率、产率、电流密度和稳定性的数值范围是多少？"
+    expected_role: results
+    language: zh
+    scenario: quantitative_range
+  - query: "What performance values, units, and uncertainties were reported?"
+    expected_role: results
+    language: en
+    scenario: quantitative_range
+  - query: "不同来源对同一催化剂性能给出了哪些冲突数值？"
+    expected_role: results
+    language: zh
+    scenario: conflict_evidence
+  - query: "催化剂结构和反应条件如何共同影响产物选择性？"
+    expected_role: relations
+    language: zh
+    scenario: cross_module_multi_hop
+  - query: "How do catalyst state, conditions, and intermediates explain selectivity?"
+    expected_role: relations
+    language: en
+    scenario: cross_module_multi_hop
+  - query: "“协同效应”可能对应哪些结构性能关系或反应路径？"
+    expected_role: relations
+    language: zh
+    scenario: ambiguous_topic
+  - query: "作者在指定论文中提出了什么机制结论及适用边界？"
+    expected_role: claims
+    language: zh
+    scenario: source_constraint
+  - query: "Which mechanistic claims conflict across sources, and how are they attributed?"
+    expected_role: claims
+    language: en
+    scenario: conflict_evidence
+  - query: "作者明确没有证明哪些因果或活性位结论？"
+    expected_role: claims
+    language: zh
+    scenario: negation
+  - query: "这套电催化知识库能否预测下一届世界杯冠军？"
+    expected_role: claims
+    expected_behavior: no_relevant_result
+    language: zh
+    scenario: out_of_domain
+chain_test_queries:
+  - query: "哪篇论文采用什么制备方法，在何种条件下获得了目标性能？"
+    expected_roles: [literature, methods, conditions, results]
+    language: zh
+    scenario: cross_module_multi_hop
+  - query: "Which source links catalyst structure to selectivity and mechanism?"
+    expected_roles: [literature, entities, results, relations]
+    language: en
+    scenario: cross_module_multi_hop
+  - query: "比较两个来源的催化剂制备差异及其性能结果。"
+    expected_roles: [literature, methods, results]
+    language: zh
+    scenario: source_constraint
+  - query: "法拉第效率在不同电位范围内如何变化，作者如何解释？"
+    expected_roles: [conditions, results, relations]
+    language: zh
+    scenario: quantitative_range
+  - query: "Which catalyst states were not tested, and how does that limit the claim?"
+    expected_roles: [entities, conditions, claims]
+    language: en
+    scenario: negation
+  - query: "“活性位”可能指哪些结构，它们各自关联什么中间体和结果？"
+    expected_roles: [entities, results, relations]
+    language: zh
+    scenario: ambiguous_topic
+  - query: "哪些论文的性能数值冲突，各自使用了什么测试方法？"
+    expected_roles: [literature, methods, results, claims]
+    language: zh
+    scenario: conflict_evidence
+  - query: "Trace the source, method, condition, and evidence behind the mechanism claim."
+    expected_roles: [literature, methods, conditions, claims]
+    language: en
+    scenario: source_constraint
+  - query: "从催化剂结构、反应条件到产物选择性的完整证据链是什么？"
+    expected_roles: [entities, conditions, results, relations]
+    language: zh
+    scenario: cross_module_multi_hop
+  - query: "电催化证据能否支持一个无关体育赛事的确定结论？"
+    expected_roles: [literature, claims]
+    expected_behavior: no_relevant_result
+    language: zh
+    scenario: out_of_domain

@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://researchkeeper.dev/schema/schema-proposal-v1.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "template_id",
+    "template_version",
+    "schema_version",
+    "modules",
+    "vector_gate_queries"
+  ],
+  "properties": {
+    "template_id": {"type": "string", "minLength": 1},
+    "template_version": {"type": "string", "minLength": 1},
+    "schema_version": {"const": "schema_v1"},
+    "modules": {
+      "type": "array",
+      "minItems": 7,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "display",
+          "file",
+          "role",
+          "description",
+          "trigger_keywords",
+          "extract_rules",
+          "audit_focus"
+        ],
+        "properties": {
+          "name": {"type": "string"},
+          "display": {"type": "string"},
+          "file": {"type": "string"},
+          "role": {
+            "enum": [
+              "literature",
+              "entities",
+              "methods",
+              "conditions",
+              "results",
+              "relations",
+              "claims"
+            ]
+          },
+          "description": {"type": "string"},
+          "trigger_keywords": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string"}
+          },
+          "extract_rules": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {"type": "string"}
+          },
+          "audit_focus": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string"}
+          }
+        }
+      }
+    },
+    "vector_gate_queries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["query", "expected_role"],
+        "properties": {
+          "query": {"type": "string", "minLength": 1},
+          "language": {"enum": ["zh", "en", "mixed"]},
+          "scenario": {"type": "string", "minLength": 1},
+          "expected_behavior": {"type": "string", "minLength": 1},
+          "expected_role": {
+            "enum": [
+              "literature",
+              "entities",
+              "methods",
+              "conditions",
+              "results",
+              "relations",
+              "claims"
+            ]
+          }
+        }
+      }
+    },
+    "vector_gate_chain_queries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["query", "expected_roles"],
+        "properties": {
+          "query": {"type": "string", "minLength": 1},
+          "language": {"enum": ["zh", "en", "mixed"]},
+          "scenario": {"type": "string", "minLength": 1},
+          "expected_behavior": {"type": "string", "minLength": 1},
+          "expected_roles": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "enum": [
+                "literature",
+                "entities",
+                "methods",
+                "conditions",
+                "results",
+                "relations",
+                "claims"
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

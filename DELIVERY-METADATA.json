@@ -1,0 +1,47 @@
+{
+  "format_version": 1,
+  "created_at": "2026-08-12T21:01:06.397774+08:00",
+  "product": {
+    "name": "ResearchKeeper",
+    "version": "0.2.0",
+    "source_commit": "cb62811a0325c1846643f1024939f7afb308bbb8"
+  },
+  "marketplace": {
+    "name": "researchkeeper-local",
+    "manifest": ".claude-plugin/marketplace.json",
+    "plugin": "researchkeeper@researchkeeper-local",
+    "plugin_root": "plugins/researchkeeper"
+  },
+  "plugin_tree": {
+    "file_count": 196,
+    "total_bytes": 2985927,
+    "sha256": "1a677909e8eeb9a0b54267285a39114421b15f721aedf1d7e6046ac4c26705d6"
+  },
+  "workflow_guide": {
+    "path": "plugins/researchkeeper/skills/researchkeeper/references/RSK-DETAILED-GUIDE.md",
+    "sha256": "e4a212e14984ad448f7b05ce965e200e190bc915d3f0ed7a021290dc61b6fafc",
+    "matches_source_claude_md": true,
+    "loaded_by": "plugins/researchkeeper/skills/researchkeeper/SKILL.md"
+  },
+  "excluded": [
+    "Git metadata",
+    "tests",
+    "CI and development-only root instructions",
+    "build directories",
+    "wheel files",
+    "egg-info",
+    "Python caches",
+    "models",
+    "virtual environments",
+    "user workspaces"
+  ],
+  "validation": {
+    "claude_code_version": "2.1.220",
+    "marketplace_strict": "pass",
+    "plugin_strict": "pass",
+    "python": "3.11.9",
+    "cli_help": "pass",
+    "bootstrap_help": "pass",
+    "disposable_compute_init": "pass"
+  }
+}

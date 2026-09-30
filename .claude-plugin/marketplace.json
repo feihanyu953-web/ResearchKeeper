@@ -1,0 +1,15 @@
+{
+  "name": "researchkeeper-local",
+  "description": "ResearchKeeper v0.2.0 local Claude Code marketplace package.",
+  "owner": {
+    "name": "ResearchKeeper Contributors"
+  },
+  "plugins": [
+    {
+      "name": "researchkeeper",
+      "source": "./plugins/researchkeeper",
+      "description": "File-first academic knowledge management with reproducible semantic retrieval.",
+      "version": "0.2.0"
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+# Optional CUDA 12.8 overlay for the Python 3.11 plugin environment.
+# Install only after requirements.lock and only when the user selects CUDA.
+--index-url https://download.pytorch.org/whl/cu128
+torch==2.11.0+cu128

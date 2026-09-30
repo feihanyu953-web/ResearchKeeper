@@ -1,0 +1,132 @@
+test_queries:
+  - query: "哪篇论文首次报告了目标现象，来源位置在哪里？"
+    expected_role: literature
+    language: zh
+    scenario: source_constraint
+  - query: "Which paper and source section reported the target observation?"
+    expected_role: literature
+    language: en
+    scenario: source_constraint
+  - query: "哪些来源对同一结论给出了不一致的报告？"
+    expected_role: literature
+    language: zh
+    scenario: conflict_evidence
+  - query: "研究中涉及哪些材料、体系或物种？"
+    expected_role: entities
+    language: zh
+    scenario: role_smoke
+  - query: "Which material, organism, or modeled system was investigated?"
+    expected_role: entities
+    language: en
+    scenario: role_smoke
+  - query: "文中“活性组分”可能指哪些不同实体？"
+    expected_role: entities
+    language: zh
+    scenario: ambiguous_topic
+  - query: "作者采用了什么实验或计算方法？"
+    expected_role: methods
+    language: zh
+    scenario: role_smoke
+  - query: "Which protocol and analysis method produced the reported data?"
+    expected_role: methods
+    language: en
+    scenario: source_constraint
+  - query: "哪些对照方法没有使用目标处理步骤？"
+    expected_role: methods
+    language: zh
+    scenario: negation
+  - query: "测量在什么温度、压力和时间范围内进行？"
+    expected_role: conditions
+    language: zh
+    scenario: quantitative_range
+  - query: "What operating range and units define the reported conditions?"
+    expected_role: conditions
+    language: en
+    scenario: quantitative_range
+  - query: "哪些实验条件明确不包含目标添加剂？"
+    expected_role: conditions
+    language: zh
+    scenario: negation
+  - query: "目标指标在给定条件下的数值范围是多少？"
+    expected_role: results
+    language: zh
+    scenario: quantitative_range
+  - query: "What quantitative outcome and uncertainty were reported?"
+    expected_role: results
+    language: en
+    scenario: quantitative_range
+  - query: "不同来源对同一结果给出了哪些冲突数值？"
+    expected_role: results
+    language: zh
+    scenario: conflict_evidence
+  - query: "实体变化如何通过所用方法影响最终结果？"
+    expected_role: relations
+    language: zh
+    scenario: cross_module_multi_hop
+  - query: "How do the method, conditions, and entity state explain the outcome?"
+    expected_role: relations
+    language: en
+    scenario: cross_module_multi_hop
+  - query: "“增强效应”在文中对应哪些可能的关系或机制？"
+    expected_role: relations
+    language: zh
+    scenario: ambiguous_topic
+  - query: "作者在指定论文中提出了什么结论及适用范围？"
+    expected_role: claims
+    language: zh
+    scenario: source_constraint
+  - query: "Which claims conflict across sources, and how is each attributed?"
+    expected_role: claims
+    language: en
+    scenario: conflict_evidence
+  - query: "作者明确没有声称哪些因果关系？"
+    expected_role: claims
+    language: zh
+    scenario: negation
+  - query: "这套知识库能否给出明天的股票收盘价？"
+    expected_role: claims
+    expected_behavior: no_relevant_result
+    language: zh
+    scenario: out_of_domain
+chain_test_queries:
+  - query: "哪篇论文使用什么方法，在何种条件下获得了目标结果？"
+    expected_roles: [literature, methods, conditions, results]
+    language: zh
+    scenario: cross_module_multi_hop
+  - query: "Which source links the studied entity to the reported outcome?"
+    expected_roles: [literature, entities, results, relations]
+    language: en
+    scenario: cross_module_multi_hop
+  - query: "比较两个来源的方法差异及其对应结果。"
+    expected_roles: [literature, methods, results]
+    language: zh
+    scenario: source_constraint
+  - query: "目标指标在不同条件范围内如何变化，作者如何解释？"
+    expected_roles: [conditions, results, relations]
+    language: zh
+    scenario: quantitative_range
+  - query: "Which entity states were not tested, and how does that limit the claim?"
+    expected_roles: [entities, conditions, claims]
+    language: en
+    scenario: negation
+  - query: "同一术语可能对应哪些实体，它们各自关联什么结果？"
+    expected_roles: [entities, results, relations]
+    language: zh
+    scenario: ambiguous_topic
+  - query: "哪些来源的数值互相冲突，各自使用了什么方法？"
+    expected_roles: [literature, methods, results, claims]
+    language: zh
+    scenario: conflict_evidence
+  - query: "Trace the source, method, condition, and evidence behind the main claim."
+    expected_roles: [literature, methods, conditions, claims]
+    language: en
+    scenario: source_constraint
+  - query: "从研究对象、处理方法到观察结果，完整证据链是什么？"
+    expected_roles: [entities, methods, results, relations]
+    language: zh
+    scenario: cross_module_multi_hop
+  - query: "知识库证据能否支持一个无关领域的确定结论？"
+    expected_roles: [literature, claims]
+    expected_behavior: no_relevant_result
+    language: zh
+    scenario: out_of_domain

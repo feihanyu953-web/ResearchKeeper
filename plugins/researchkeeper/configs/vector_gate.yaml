@@ -1,0 +1,62 @@
+# 向量层审计 gate 定义
+sync_audit:
+  pass:
+    coverage: 1.0
+    truncation: 0
+  warn:
+    coverage: 0.95
+    truncation: "< 5"
+  fail:
+    coverage: "< 0.95"
+    truncation: ">= 5"
+
+retrieval_audit:
+  test_queries: 10
+  # v1.1: 适配 per-record chunk 架构。fidelity 为主判据（向量层可控），
+  # recall 为副判据（同时依赖 kb 源记录标注质量，低 recall 归入 NON-BLOCKING）。
+  pass:
+    fidelity: ">= 0.85"
+    recall: ">= 0.65"
+  warn:
+    fidelity: "0.65-0.85"
+    recall: "0.45-0.65"
+  fail:
+    fidelity: "< 0.65"
+    recall: "< 0.45"
+
+test_queries:
+  - query: "界面水氢键网络如何影响 PCET 反应"
+    ground_truth: "kb/mechanism.md"
+  - query: "C-N 偶联反应路径和决速步"
+    ground_truth: "kb/mechanism.md"
+  - query: "阳离子 Li+ Na+ K+ 对电催化性能的影响"
+    ground_truth: "kb/performance.md"
+  - query: "催化剂合成中热解温度和前驱体的选择"
+    ground_truth: "kb/synthesis.md"
+  - query: "Raman 光谱中界面水的特征峰位归属"
+    ground_truth: "kb/spectra.md"
+  - query: "AIMD 模拟中溶剂化效应的处理方法"
+    ground_truth: "kb/methods.md"
+  - query: "硝酸盐电还原合成氨的反应机理"
+    ground_truth: "kb/mechanism.md"
+  - query: "XPS 结合能如何表征催化剂电子结构"
+    ground_truth: "kb/spectra.md"
+  - query: "电催化 CO2 还原的法拉第效率和电流密度"
+    ground_truth: "kb/performance.md"
+  - query: "electrocatalytic C-N coupling mechanism on Cu-based catalysts"
+    ground_truth: "kb/mechanism.md"
+
+# Chain claim 检索质量审计（Layer 2b）
+# EXAMPLES — replace with your own papers after ingest.
+# expected_chain_paper: 该 query 应命中 chain-<paper_id> 的论文；
+# expected_modules: --expand 应返回的模块列表。
+chain_test_queries:
+  - query: "Shen2026 甲酰胺合成机理"
+    expected_chain_paper: "Shen2026"
+    expected_modules: ["synthesis", "performance", "mechanism", "spectra"]
+  - query: "界面水氢键网络结构"
+    expected_chain_paper: "Chen2026"
+    expected_modules: ["spectra", "mechanism", "methods"]
+  - query: "MACE 训练 GPU 显存"
+    expected_chain_paper: "Geng2025"
+    expected_modules: ["methods", "mechanism"]

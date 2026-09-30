@@ -1,0 +1,38 @@
+# ResearchKeeper configuration
+# Copy this file to rsk_config.yaml and edit paths for your machine.
+
+# --- Workspace ---
+# Select with CLI --workspace, then RSK_ROOT, then the nearest parent containing
+# rsk_config.yaml, with the current directory as the final fallback.
+
+# --- Python interpreter (uses system PATH python by default) ---
+# python_path: "C:/Users/.../python.exe"
+
+# --- Model settings ---
+# Models default to the per-user ResearchKeeper cache, outside this workspace.
+# An absolute override is recommended; a relative override is under user cache.
+# model_cache_dir: "D:/ResearchKeeper-cache/models"
+# device: auto  # auto | cuda | cpu (auto: detect CUDA, fallback CPU)
+
+# --- Zotero bridge ---
+zotero:
+  # db_path: "C:/Users/.../Zotero/zotero.sqlite"
+
+# --- Knowledge base ---
+kb_modules: "schemas/generated/modules.yaml"
+
+# --- Vector database ---
+vector_db_dir: "vector_db"
+
+# --- Query server ---
+query_server:
+  host: "127.0.0.1"
+  port: 8765
+
+# --- Compute KB (Phase 2) ---
+compute_kb:
+  enabled: false
+
+# --- Audit ---
+audit:
+  vector_gate_config: "schemas/generated/vector_gate_queries.yaml"
