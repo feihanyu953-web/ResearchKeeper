@@ -1,6 +1,6 @@
 ---
 name: researchkeeper
-description: Use when working with ResearchKeeper paper reading, knowledge retrieval, kb or wiki maintenance, vector search, VASP, or LAMMPS knowledge.
+description: Use when working with ResearchKeeper paper reading, knowledge retrieval, multi-paper comparison, batch triage/ranking, kb or wiki maintenance, vector search, VASP, or LAMMPS knowledge.
 ---
 
 # Use ResearchKeeper
@@ -29,6 +29,8 @@ Read the matching plugin workflow before acting:
 |---|---|
 | Paper reading or follow-up | `${CLAUDE_PLUGIN_ROOT}/workflow/paper-reading/READING.md` |
 | Export notes or compile PDF | `${CLAUDE_PLUGIN_ROOT}/workflow/paper-reading/EXPORT.md` |
+| Triage/rank a batch before ingest (title+abstract only) | `${CLAUDE_PLUGIN_ROOT}/workflow/paper-reading/TRIAGE.md` |
+| Compare multiple papers on one topic (kb as source) | `${CLAUDE_PLUGIN_ROOT}/workflow/paper-reading/COMPARE.md` |
 | Ingest papers | `${CLAUDE_PLUGIN_ROOT}/workflow/knowledge/INGEST.md` |
 | Retrieve existing knowledge | `${CLAUDE_PLUGIN_ROOT}/workflow/knowledge/RETRIEVAL.md` |
 | Modify wiki presentation | `${CLAUDE_PLUGIN_ROOT}/workflow/knowledge/WIKI_SYNC.md` |

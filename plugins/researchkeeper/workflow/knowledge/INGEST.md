@@ -87,7 +87,7 @@ rsk validate-si --parsed-si tmp/<key>.md --extracted-dir tmp/extracted/ --json
 
 #### 批量入库（N≥2）
 
-**触发**：用户说"批量导入 N 篇论文"（N≥2）。N≥5 时建议先走批量筛文协议（如工作区提供的 TRIAGE：仅凭 title+abstract 做高/中/低评级，"高"才全文精读、"中"只入 literature 索引、"低"跳过留原因），避免逢文必读的精读开销。
+**触发**：用户说"批量导入 N 篇论文"（N≥2）。N≥5 时建议先走 `workflow/paper-reading/TRIAGE.md` 快速筛选协议（仅凭 title+abstract 做高/中/低评级，"高"才全文精读、"中"只入 literature 索引、"低"跳过留原因），避免逢文必读的精读开销。
 
 **分片策略**：`agent_count = min(ceil(N / 2), 8)`，每个 agent 处理 1-2 篇论文。
 

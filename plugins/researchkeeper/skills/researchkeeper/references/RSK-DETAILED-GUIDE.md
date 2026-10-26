@@ -31,6 +31,8 @@ workspace。若尚未初始化 schema，先调用
 |---|---|
 | 论文精读、解读、追问 | `workflow/paper-reading/READING.md` |
 | 导出笔记、编译 PDF | `workflow/paper-reading/EXPORT.md` |
+| 批量入库前筛文、优先级评级 | `workflow/paper-reading/TRIAGE.md` |
+| 多篇论文横向对比、主题综合 | `workflow/paper-reading/COMPARE.md` |
 | 查已有论文知识 | `workflow/knowledge/RETRIEVAL.md` |
 | 论文入库（单篇/批量，Zotero→kb→向量）| `workflow/knowledge/INGEST.md` |
 | 论文补全（只有索引，补充缺失模块）| `workflow/knowledge/INGEST.md` |
