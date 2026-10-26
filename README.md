@@ -68,6 +68,16 @@ v0.2.0（正式提交 `cb62811a0325c1846643f1024939f7afb308bbb8`，196 文件 / 
 | [plugins/researchkeeper/README.md](plugins/researchkeeper/README.md)（[中文版](plugins/researchkeeper/README_CN.md)） | 插件主文档 |
 | `plugins/researchkeeper/docs/` | architecture · getting-started · installation · customization · schema-customization · provider-protocol · contributing |
 | [plugins/researchkeeper/skills/researchkeeper/references/RSK-DETAILED-GUIDE.md](plugins/researchkeeper/skills/researchkeeper/references/RSK-DETAILED-GUIDE.md) | 主 skill 的完整使用指南（检索流程、入库流程、执行顺序） |
+| [研究方向个性化提示词.md](研究方向个性化提示词.md) | 两层个性化：工作区研究画像（推荐，升级不丢）与插件文档深度定制（更新会覆盖） |
+
+## 研究方向个性化
+
+插件文档默认带有电催化方向示例。若你的研究方向不同，使用 [研究方向个性化提示词.md](研究方向个性化提示词.md) 做两层个性化：
+
+- **第一层（推荐所有人做，零插件改动）**：在工作区根目录的 `AGENTS.md` 写入"研究画像 + 回答方式"两节——TRIAGE 筛文、COMPARE 对比等协议会自动引用画像作为评级与研究空白归纳的基准。工作区文件不受插件升级影响。
+- **第二层（可选，深度定制）**：按提示词修改已安装插件运行副本内的 `READING.md`（身份与语气、方向示例）、工作区的 `schemas/generated/vector_gate_queries.yaml`（审计测试查询）、`WIKI_SYNC.md`（学科字段表）。
+
+**持久性分级**：第一层与工作区侧的 `schemas/generated/*` 定制在插件更新后**自动保留**；第二层对插件运行副本的直接修改会在插件更新/重装时被覆盖——提示词流程可重复执行，改前请备份。
 
 ## License
 
