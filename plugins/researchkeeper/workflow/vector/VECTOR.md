@@ -71,3 +71,27 @@ $rsk = Join-Path $env:CLAUDE_PLUGIN_ROOT "bin\rsk.cmd"
 ```
 
 默认同步会刷新 `kb_papers`，并自动调用 `rsk/vector/claims.py` 重建 claims 索引（含 chain claims：每篇 ≥2 个非 literature 模块的论文自动生成一条 `chain-<paper_id>` 复合 claim，无需手动维护）。
+
+## sync 后必须重启常驻服务（向量缓存无失效）
+
+服务端在**首次查询**时 `np.load` 向量并永久缓存（`rsk/vector/server.py` 无 mtime 检查、无 reload 端点）。因此重建向量库不会影响已在运行的服务——它会一直提供进程启动那一刻的旧向量。`/health` 返回 ok **只证明进程活着，不证明向量新鲜**。
+
+凡执行过 `rsk sync`（含 `--full`），继续使用常驻服务检索前必须先重启：
+
+```powershell
+Get-CimInstance Win32_Process -Filter "Name like '%python%'" |
+  Where-Object { $_.CommandLine -like '*rsk.cli*serve*' } |
+  ForEach-Object { Stop-Process -Id $_.ProcessId -Force }
+& $rsk --workspace $workspace serve
+```
+
+刷新验证（取一条本轮新增或文本被修改的 record）：
+
+```powershell
+# 真值侧：rsk search 进程内直读磁盘，不经过服务
+& $rsk --workspace $workspace search --claims "<该 record 的特征措辞>" --top 1 --json
+# 服务侧：
+Invoke-RestMethod "http://127.0.0.1:8765/query?q=<同一措辞 URL 转义>&claims=1&top=1"
+```
+
+两者文本不一致 → 服务缓存仍陈旧，重新重启并验证。重启是安全的：`rsk search` 不依赖服务，查询永远可回退本地加载。

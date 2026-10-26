@@ -40,6 +40,19 @@ $rsk = Join-Path $env:CLAUDE_PLUGIN_ROOT "bin\rsk.cmd"
 frontmatter。学科专属字段来自相应活动模块的已核验记录；所有数值字段仍须包含
 数值、单位、条件和 source。
 
+### 学科字段参考（以活动 schema 为准）
+
+面向实验电催化 / 计算电化学工作区的常用约定（活动 schema 未覆盖时可参照）：
+
+- `method`、`system`、`reaction` 必填；`catalyst`、`electrolyte` 对实验或
+  实验+计算论文必填。
+- `ΔG_RDS`、`barrier_*` 等计算字段有则填写，值必须包含步骤描述、数值和出处；
+  `enhancement`、`FE`、`overpotential` 等实验字段有则填写。
+- 所有数值字段必须附带出处，格式如
+  `"步骤描述: 数值 (Table X, Fig. Y, Section Z)"`。
+- `tags` 通常为 2-6 个标签，用于 Obsidian 图谱分组。
+- 若论文类型无法适配某字段，直接省略，不填占位符。
+
 ## 关联概念标签
 
 本节只在当前任务同时包含导出笔记创建或更新时适用。若用户只要求修改 `wiki/**/*.md`，不得因为读取本文件而顺手修改 `已阅读文献/` 下的精读笔记。

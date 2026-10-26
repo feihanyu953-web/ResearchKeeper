@@ -87,7 +87,7 @@ rsk validate-si --parsed-si tmp/<key>.md --extracted-dir tmp/extracted/ --json
 
 #### 批量入库（N≥2）
 
-**触发**：用户说"批量导入 N 篇论文"（N≥2）。
+**触发**：用户说"批量导入 N 篇论文"（N≥2）。N≥5 时建议先走批量筛文协议（如工作区提供的 TRIAGE：仅凭 title+abstract 做高/中/低评级，"高"才全文精读、"中"只入 literature 索引、"低"跳过留原因），避免逢文必读的精读开销。
 
 **分片策略**：`agent_count = min(ceil(N / 2), 8)`，每个 agent 处理 1-2 篇论文。
 
@@ -179,6 +179,7 @@ risk_flags: []
 ```
 
 **格式铁律**：
+- 子 agent 中间结果**优先要求输出 JSON**；YAML-like 文本在手工转换时曾因缩进/引号差异导致解析器反复回退。主 AI 转换时逐块核对括号与引号闭合。
 - source_map 每条精确对应一个 Fig./Table/Section
 - schema_candidates 每条有 source 字段含具体编号
 - record_id 一律 "TBD-by-main"
@@ -196,8 +197,11 @@ risk_flags: []
 4. **missing_data_evidence 质量**：禁用笼统"原文未说明"
 
 ```
-全部达标 → 进入分批写入
-不达标 → 拒绝整批 → 重 spawn（更严格 prompt。重试仍不达标 → 主 AI 亲自精读该篇）
+逐篇独立判定状态机（不因单篇失败阻断整批）：
+- accepted：全部门禁达标 → 进入写入
+- partial：主体达标，个别模块 missing 且有完整 missing_data_evidence → 允许写入，coverage 如实标记
+- retryable_failed：门禁未达标且属可修复（如缺 source_map 条目）→ 只重 spawn 该篇（更严格 prompt），其余论文继续；重试仍不达标 → 主 AI 亲自精读该篇
+- needs_human_review：3 轮重试仍失败 → 写 kb/REVIEWER_LOG.md 待用户裁决，不阻塞其他论文
 ```
 
 ##### 分批写入（主 AI 执行）
@@ -205,6 +209,10 @@ risk_flags: []
 主 AI 负责将子 agent 产出的 YAML 中间结果转换为 JSON 并调用 `rsk sync` 写入 kb。
 
 **Step 1: 保存 JSON 文件**
+
+> **先清空再写入（强制）**：每次批量写入前必须清空 `tmp/extracted/` 上一批残留——
+> `--input-dir` 会把目录内所有 JSON 一并写入，而 record_id 按 concrete module
+> 全局递增，残留混入后无法事后安全剔除。
 
 将每个子 agent 的完整 ingest envelope（`paper_id`、
 `schema_candidates`、`module_coverage`）转为 JSON，保存到
@@ -279,6 +287,23 @@ literature 记录**不得**由子 agent 生成——PDF 解析文本中不含 DO
 4. **通过 `rsk/kb/bibliography.py:upsert_bibliography_record()` 写入**，确保每篇
    论文只有一条 literature 记录（已存在时原地替换，避免重复）。
 
+**Step 3.5（可选，精读增强）：评价类记录**
+
+书目记录之外，主 AI 在精读验收后可为每篇论文补 4-6 条**评价类记录**，作为后续
+对比综合、研究空白挖掘的证据源（仅由主 AI 亲写，子 agent 仍禁写）：
+
+- 主题清单：创新代价 / 作者承认的局限 / 审稿视角质疑 / 反直觉结果归因 /
+  理论贡献 / 实践启示。
+- 写入位置：结论、限制与证据边界对应的 `claims` role module（按活动
+  `schemas/generated/modules.yaml` 解析；旧 6 模块工作区惯例写 literature，
+  以活动 schema 的 role 映射为准）。
+- **attribution 纪律（不可跳过）**：`note` 字段以归因前缀开头——
+  `attribution:作者`（论文原文立场，可当论文观点引用，confidence 可为
+  verified/single_source）、`attribution:AI审稿视角`（AI 评价，必须转述带标签、
+  不得冒充论文内容）、`attribution:AI推测`（显式标注推测）。涉及原文的条目
+  `source` 仍须指向具体 Section/Fig./Table；纯 AI 推测条目 source 写明
+  "AI 推测，无原文出处"。
+
 **Step 4: 同步 wiki/**
 
 按 `workflow/knowledge/WIKI_SYNC.md` 同步 wiki 概念页和论文页。
@@ -324,7 +349,7 @@ rsk sync --full    # 全量重建
 
 任何涉及"某篇论文 / 某个体系 / 某类反应 / 某种方法是否在 kb 中有记录"的问题，**不得只凭 AI 记忆或直接读 kb 文件回答**。必须先用向量检索定位到具体 record_id，再读取完整 schema 行。
 
-> 最高优先级规则见 `CLAUDE.md`「专业问答强制检索前置（不可跳过）」：专业问题先检索、未命中走外部检索、回答按证据层标注。
+> 最高优先级规则见插件 `skills/researchkeeper/references/RSK-DETAILED-GUIDE.md`「专业问答强制检索前置（不可跳过）」：专业问题先检索、未命中走外部检索、回答按证据层标注。
 
 ### 两层检索架构
 
@@ -419,6 +444,12 @@ rsk sync  →  kb_papers（按活动 concrete modules 生成 per-record chunks�
 rsk sync --from-claims --full
 ```
 
+> ⚠️ `--from-claims` 只重嵌入**现有** claims_index.jsonl，不会重新运行 claim
+> 构建逻辑。修改了 claim 构造规则（同义词、chain claim 规则等）后，必须先走
+> 默认 `rsk sync`（自动重建 claims）或 `--full`，`--from-claims` 才有意义。
+> 另外常驻服务会把向量缓存在内存——`rsk sync` 后必须重启服务并做刷新验证，
+> 见 `workflow/vector/VECTOR.md`「sync 后必须重启常驻服务」。
+
 跳过自动 claims rebuild（仅在不需要刷新 claims 时使用）：
 ```powershell
 rsk sync --skip-claims
@@ -444,7 +475,7 @@ rsk sync --skip-claims  # 只同步 kb_papers，跳过 claims
 
 ## 质量审计
 
-用户通过 `/audit-all` 手动触发。详见 `.claude/skills/audit-all/SKILL.md`。
+用户通过 `/researchkeeper:audit-all` 手动触发。详见插件 `skills/audit-all/SKILL.md`（含 sync 后强制重启服务与刷新验证的 Step 0.5）。
 
 ## rsk 命令索引
 

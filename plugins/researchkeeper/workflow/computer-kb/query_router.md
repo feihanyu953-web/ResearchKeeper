@@ -1,6 +1,6 @@
 # Query Router - computer_kb 融合查询协议
 
-框架版本：v0.2
+框架版本：v0.3-domain-routes
 
 核心原则：
 
@@ -35,6 +35,7 @@
 - `kb/relations.md`
 - `kb/literature.md`
 > 模块映射按当前论文 kb/INDEX.md 解析（generic-science schema: 机理/能垒/路径/描述符位于 `relations` 模块）。
+- 若工作区存在 `wiki/`：`wiki/index.md`、`wiki/concepts/*.md`（概念页叙事是论文知识层的有效证据面）
 - 已阅读文献中的精读笔记
 
 输出标签：
@@ -151,6 +152,18 @@ computer_kb/wiki/concepts/ 下与参数相关的概念页
   - LAMMPS MD 基础 → lammps_md_basics.md
   - LAMMPS 前置命令链 → lammps_md_setup_chain.md
   - LAMMPS thermostat/integration 链 → lammps_md_fix_thermostat_chain.md
+  - LAMMPS MACE pair → lammps_mace_pair_chain.md
+  - LAMMPS 温度统计与冻结原子 → lammps_temp_frozen_atoms.md
+  - MACE 训练 → mace_training_basics.md
+  - MACE CLI 参数 → mace_cli_parameters.md
+  - MACE in LAMMPS → mace_in_lammps.md
+  - MACE batch/VRAM → mace_batch_vram_hardware.md
+  - MACE loss 权重 → mace_training_loss_balance.md
+  - DeePMD/DPA4C 训练微调冻结压缩 → deepmd_dpa4c_basics.md
+  - DPA4C → LAMMPS MD 管线 → aimd_to_dpa4c_to_lammps.md
+  - MLFF 建集读哪个 VASP 输出文件 → vasp_output_for_mlff_dataset.md
+  - AIMD 轨迹的氢键环境-势垒理论分析（Q_pre/n̄_ww/P_z → ΔG‡）→ cv_hbond_pt_framework.md
+  - 跨软件参数流 → cross_software_parameter_flow.md
 -> computer_kb/records
 -> computer_kb/sources.md
 -> 如涉及论文复现，再读取 kb/methods.md
@@ -176,14 +189,30 @@ computer_kb/wiki/concepts/ 下与参数相关的概念页
   - VASP AIMD 原子爆炸 → vasp_md_atom_explosion.md
   - VASP 温度失控 → aimd_temperature_runaway.md
   - VASP NEB 不收敛 → vasp_neb_not_converge.md
+  - VASP Γ-only 金属 slab 电子态翻转（E0 跳变）→ vasp_gamma_state_flip.md
   - VASP 吸附能异常 → vasp_adsorption_energy_abnormal.md
   - VASP DOS/d-band 异常 → vasp_dos_dband_abnormal.md
+  - VASP 带电 slab ZBRENT → vasp_charged_slab_zbrent.md
+  - VASP 频率 NPAR 冲突 → vasp_freq_npar_kpoints.md
   - LAMMPS 能量 NaN → lammps_md_energy_nan.md
   - LAMMPS 丢失原子 → lammps_lost_atoms.md
   - LAMMPS 数值不稳定 → lammps_non_numeric_instability.md
   - LAMMPS out-of-range atoms → lammps_out_of_range_atoms.md
   - LAMMPS unrecognized style/package → lammps_unrecognized_style_package.md
   - LAMMPS energy/stress not tallied → lammps_energy_stress_not_tallied.md
+  - LAMMPS pair mace 未识别 → lammps_mace_pair_not_found.md
+  - LAMMPS PLUMED 未加载 → lammps_plumed_lib_not_loaded.md
+  - MACE CUDA OOM → mace_cuda_out_of_memory.md
+  - MACE 数据加载 initial loss → mace_data_loading_initial_loss.md
+  - MACE E0s 误差 → mace_e0s_large_energy_error.md
+  - MACE 数据集质量（高能 force）→ mace_dataset_quality_high_energy_forces.md
+  - MACE GPU 过热降频 → mace_gpu_thermal_throttle.md
+  - MACE 多 GPU checkpoint → mace_multigpu_checkpoint.md
+  - MACE Kokkos/newton 冲突 → mace_kokkos_newton_conflict.md
+  - MACE 2GPU domain decomp → mace_domain_decomp_2gpu.md
+  - MACE 微调 best 退回 epoch-0 → mace_finetune_best_checkpoint_epoch0.md
+  - POSCAR/POTCAR 元素顺序错配（无报错静默出错）→ poscar_potcar_order_mismatch.md
+  - deepmd Kokkos neigh full 冲突 → deepmd_kokkos_newton_conflict.md
 -> computer_kb/records/errors.md        # 通用错误事实入口
 -> computer_kb/records/error_chains/    # 本地/任务特化诊断链
 -> computer_kb/wiki/workflows
@@ -240,6 +269,22 @@ computer_kb/wiki/concepts/ 下与参数相关的概念页
 - 需要本地小测试验证的边界。
 
 ### 2.7 Workflow 复用/修改
+
+已跑通的 workflow 路由（页面存在时优先直达）：
+
+```text
+- VASP ASE→MACE 数据集构建 → vasp_ase_to_mace_dataset.md
+- MACE 训练-评估-LAMMPS 冒烟测试 → mace_train_eval_lammps_smoke_test.md
+- 电催化界面水 AIMD+MLFF 主线 → electrocatalysis_interface_water_aimd_mlff.md
+- AIMD→MACE→LAMMPS 管线 → aimd_to_mace_to_lammps.md
+- AIMD→DPA4C→LAMMPS 管线 → aimd_to_dpa4c_to_lammps.md
+- VASP 大体系两步 SCF → vasp_two_step_scf_large_system.md
+- MLFF 建集的 VASP 输出选取 → vasp_output_for_mlff_dataset.md
+```
+
+> 上述领域路由仅在当前工作区 `computer_kb/wiki/workflows/` 实际含有对应页面时
+> 生效；页面不存在时跳过该直达项，走下方通用流程（其他领域路由表同理——
+> 路由是工作区扩充项，不是插件内置数据）。
 
 读取顺序：
 
