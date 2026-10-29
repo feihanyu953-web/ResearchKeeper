@@ -6,7 +6,15 @@ for %%I in ("%~dp0..") do set "RSK_PLUGIN_ROOT=%%~fI"
 
 REM -- Fall back to defaults when the host does not inject these variables
 if not defined CLAUDE_PLUGIN_ROOT set "CLAUDE_PLUGIN_ROOT=%RSK_PLUGIN_ROOT%"
-if not defined CLAUDE_PLUGIN_DATA set "CLAUDE_PLUGIN_DATA=%USERPROFILE%\.claude\plugins\data\researchkeeper-researchkeeper-local"
+if not defined CLAUDE_PLUGIN_DATA (
+    if exist "%USERPROFILE%\.claude\plugins\data\researchkeeper-researchkeeper-local\venvs\active.json" (
+        set "CLAUDE_PLUGIN_DATA=%USERPROFILE%\.claude\plugins\data\researchkeeper-researchkeeper-local"
+    ) else if exist "%USERPROFILE%\.zcode\cli\plugins\data\researchkeeper@researchkeeper-local\venvs\active.json" (
+        set "CLAUDE_PLUGIN_DATA=%USERPROFILE%\.zcode\cli\plugins\data\researchkeeper@researchkeeper-local"
+    ) else (
+        set "CLAUDE_PLUGIN_DATA=%USERPROFILE%\.claude\plugins\data\researchkeeper-researchkeeper-local"
+    )
+)
 
 set "RSK_ACTIVE_FILE=%CLAUDE_PLUGIN_DATA%\venvs\active.json"
 if not exist "%RSK_ACTIVE_FILE%" (

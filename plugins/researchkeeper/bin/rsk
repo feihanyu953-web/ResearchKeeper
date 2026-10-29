@@ -1,6 +1,16 @@
 #!/bin/sh
 set -e
 
+if [ -z "${CLAUDE_PLUGIN_ROOT:-}" ]; then
+    CLAUDE_PLUGIN_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+fi
+if [ -z "${CLAUDE_PLUGIN_DATA:-}" ]; then
+    if [ -r "$HOME/.claude/plugins/data/researchkeeper-researchkeeper-local/venvs/active.json" ]; then
+        CLAUDE_PLUGIN_DATA="$HOME/.claude/plugins/data/researchkeeper-researchkeeper-local"
+    elif [ -r "$HOME/.zcode/cli/plugins/data/researchkeeper@researchkeeper-local/venvs/active.json" ]; then
+        CLAUDE_PLUGIN_DATA="$HOME/.zcode/cli/plugins/data/researchkeeper@researchkeeper-local"
+    fi
+fi
 if [ -z "${CLAUDE_PLUGIN_DATA:-}" ]; then
     echo "ResearchKeeper: CLAUDE_PLUGIN_DATA is not set" >&2
     exit 2
